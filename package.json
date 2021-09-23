@@ -2,20 +2,28 @@
   "name": "electron-react",
   "version": "0.1.0",
   "private": true,
+  "productName": "Electron React App Example",
+  "main": "electron/main.js",
+  "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "concurrently": "^6.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "wait-on": "^6.0.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "concurrently \"react-scripts start \" \"wait-on http://localhost:3000 && npm run electron\"",
+    "prebuild-electron": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "set ELECTRON_START_URL=http://localhost:3000 && electron .",
+    "build-electron": "robocopy electron build/electron /S",
+    "package": "electron-builder build --win -c.extraMetadata.main=build/electron/main.js --publish never"
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +42,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^14.0.1",
+    "electron-builder": "^22.11.7"
+  },
+  "build": {
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "publish": {
+      "provider": "github",
+      "repo": "electron-react",
+      "owner": "Norbert"
+    }
   }
 }
